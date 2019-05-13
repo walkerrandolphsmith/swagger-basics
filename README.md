@@ -13,3 +13,11 @@ This command will generate an API written in Nodejs in `./services/api/server`. 
 ```
 ./ctl.sh up api
 ```
+
+To test the service is available try to retrive a `flag` that doesn't exist.
+
+```
+curl http://localhost:3000/flag/12
+```
+
+You should receieve `getFlagById ok!` as output because the business logic for our generated api has not been implemented.
