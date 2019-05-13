@@ -1,0 +1,174 @@
+openapi: 3.0.0
+info:
+  description: "Description"
+  version: "1.0.0"
+  title: "Title"
+  contact:
+    email: "hello@openflags.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+servers:
+  - url: http://openflags.io/v1
+tags:
+  - name: "flag"
+    description: "Feature Flags API"
+paths:
+  /flag:
+    post:
+      tags:
+        - "flag"
+      summary: "Create"
+      description: "Create a new feature flag"
+      operationId: "addFlag"
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Flag"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Flag"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Flag"
+      responses:
+        200:
+          $ref: "#/components/responses/SuccessfulOperation"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        405:
+          $ref: "#/components/responses/InvalidFlag"
+  /flag/{id}:
+    get:
+      tags:
+        - "flag"
+      summary: "Get by ID"
+      description: "Returns a single flag"
+      operationId: "getFlagById"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: "string"
+          required: true
+          description: "ID of flag to return"
+      responses:
+        200:
+          description: "Successful Operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Flag"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Flag"
+        400:
+          $ref: "#/components/responses/InvalidID"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        404:
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags:
+        - "flag"
+      summary: "Update by ID"
+      description: "Update a specific, exisiting flag"
+      operationId: "updateFlagWithForm"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: "string"
+          required: true
+          description: "ID of flag to return"
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Flag"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Flag"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Flag"
+      responses:
+        200:
+          description: "Successful Operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Flag"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Flag"
+        400:
+          $ref: "#/components/responses/InvalidID"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        404:
+          $ref: "#/components/responses/NotFound"
+        405:
+          $ref: "#/components/responses/InvalidFlag"
+    delete:
+      tags:
+        - "flag"
+      summary: "Delete"
+      description: "Delete flag by ID"
+      operationId: "deleteFlag"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: "string"
+          required: true
+          description: "ID of flag to return"
+      responses:
+        200:
+          $ref: "#/components/responses/SuccessfulOperation"
+        400:
+          $ref: "#/components/responses/InvalidID"
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+        404:
+          $ref: "#/components/responses/NotFound"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: "http"
+      scheme: "bearer"
+      bearerFormat: "JWT"
+  responses:
+    UnauthorizedError:
+      description: "Access token is missing or invalid"
+    SuccessfulOperation:
+      description: "Successful Operation"
+    InvalidID:
+      description: "Invaid ID supplied"
+    NotFound:
+      description: "Resource not found"
+    InvalidFlag:
+      description: "Invalid Flag supplied"
+  schemas:
+    Flag:
+      type: "object"
+      required:
+        - "name"
+      properties:
+        id:
+          type: "string"
+          example: "SHOPPINGCART_ADD_TO_CART"
+        enabled:
+          type: "boolean"
+          description: "True if the flag is enabled, false otherwise"
+
+security:
+  - bearerAuth: []
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

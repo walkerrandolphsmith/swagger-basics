@@ -1,0 +1,28 @@
+version: "3.3"
+
+services:
+  gen:
+    build:
+      context: ./
+      dockerfile: ./services/generator/Dockerfile
+    image: swagger-gen-image-dev
+    container_name: swagger-gen-container-dev
+    volumes:
+      - ./services/generator/api.yaml:/usr/app/api.yaml
+      - ./services/api/server:/usr/app/server
+      - ./services/docs:/usr/app/docs
+    command: npx og -o ./server api.yaml express
+    #command: npx og -o ./docs api.yaml markdown
+
+  api:
+    build:
+      context: ./
+      dockerfile: ./services/api/Dockerfile
+    image: swagger-server-image-dev
+    container_name: swagger-server-container-dev
+    volumes:
+      - ./services/api/server/config:/usr/app/config
+      - ./services/api/server/server:/usr/app/server
+      - ./services/api/server/src:/usr/app/src
+    ports:
+      - "3000:3000"
